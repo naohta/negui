@@ -9,6 +9,9 @@ class Dynamodb
   sw = Stopwatch.new("Create AWS session");
 
   secrets = [ENV['AWS_KEY'], ENV['AWS_SECRET']]
+  p "/*--------"
+  p secrets
+  p "--------*/"
   if(secrets[0]==nil) then
     puts "secrets[0] is nil. There may be no heroku configs on this env. I will read local secrets file."
     h = Hash[*File.read('.nao.secrets').split(/[ \n]+/)] 
