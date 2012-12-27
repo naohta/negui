@@ -1,5 +1,5 @@
 require 'sinatra'
 
 get '/' do
-  "Hello, world. I'm heroku."
+  "Hi, are you fine?"
 end
