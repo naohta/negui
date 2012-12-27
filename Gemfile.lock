@@ -1,7 +1,9 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    aws_sdk (3.1.5)
     daemons (1.1.9)
+    eventmachine (1.0.0)
     eventmachine (1.0.0-x86-mingw32)
     rack (1.4.1)
     sinatra (1.1.0)
@@ -17,5 +19,6 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  aws_sdk
   sinatra (= 1.1.0)
   thin
