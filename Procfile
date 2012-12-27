@@ -1,1 +1,1 @@
-web: bundle exec ruby web.rb -p $PORT
+webby: bundle exec ruby web.rb -p $PORT
