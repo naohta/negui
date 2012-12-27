@@ -18,8 +18,8 @@ class Dynamodb
     secrets = [ h['aws_access_key_id'], h['aws_secret_access_key'] ]
   end
   security_token_service = AWS::STS.new(
-    access_key_id: secrets[0],
-    secret_access_key: secrets[1]
+    access_key_id: ENV['AWS_KEY'], #secrets[0],
+    secret_access_key: ENV['AWS_SECRET'] #secrets[1]
   )
   session = security_token_service.new_session(duration:60*30)
   AWS.config({dynamo_db_endpoint:"dynamodb.ap-northeast-1.amazonaws.com"})
