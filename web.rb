@@ -11,7 +11,7 @@ get '/hello/:name' do
   "hello, #{params[:name]}:)"
 end
 
-get '/api/:uid/:hashkey/leave_notice/list'
+get '/api/:uid/:hashkey/leave_notice/list' do
 end
 
 get '/test/json' do
