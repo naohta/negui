@@ -11,48 +11,14 @@ get '/hello/:name' do
   "hello, #{params[:name]}:)"
 end
 
-get '/api/:cmd/:params/:uid/:passkey' do
-  "API..."
-  "#{params[:cmd]},#{params[:passkey]}"
+get '/api/:uid/:hashkey/leave_notice/list'
 end
 
-
-get '/api/:cmd :uid/' do
-  "API..."
-  "#{params[:cmd]},#{params[:uid]}"
+get '/test/json'
+  '{"root":{"k1":"yas!","k2":"This is JSON one."}}'
 end
 
-get '/products/as_html' do
-  db = Dynamodb.db
-  db.tables.each{|t| puts t.name}
-  tbl = db.tables['products']
-  tbl.load_schema
-  items = tbl.items()
-  s = ""
-  items.each{|item|
-    s += "-----------------<br/>"
-    item.attributes.each{|attr| s += (attr.to_s + "<br/>")}
-  }
-  
-  return s
-end
-
-get '/products/as_json' do
-  content_type :json
-  db = Dynamodb.db
-  db.tables.each{|t| puts t.name}
-  tbl = db.tables['products']
-  tbl.load_schema
-  items = tbl.items()
-  s = "["
-  items.each{ |item|
-    s += (JSON.generate(item.attributes.to_h) + ",")
-  }
-  s += "]"
-  return s
-end
-
-get '/products/as_json2' do
+get '/products/json' do
   content_type :json
   db = Dynamodb.db
   db.tables.each{|t| puts t.name}
@@ -63,57 +29,12 @@ get '/products/as_json2' do
   
   first=true; items.each{ |item|
     if(first) then first=false else s+="," end
-    p "item.attributes", item.attributes
-    p "item.attributes.to_h", item.attributes.to_h
-    p "JSON.generate(item.attributes.to_h)", JSON.generate(item.attributes.to_h)
     s += JSON.generate(item.attributes.to_h)
   }
   s += "]"
   return s
 end
 
-
-get '/products/as_json3' do
-  content_type :json
-  db = Dynamodb.db
-  db.tables.each{|t| puts t.name}
-  tbl = db.tables['products']
-  tbl.load_schema
-  items = tbl.items()
-  s = "["
-  
-  first=true; items.each{ |item|
-    if(first) then first=false else s+="," end
-    p "item.attributes", item.attributes
-    p "item.attributes.to_h", item.attributes.to_h
-    p "JSON.generate(item.attributes.to_h)", JSON.generate(item.attributes.to_h)
-    s += JSON.pretty_generate(item.attributes.to_h)
-  }
-  s += "]"
-  return s
-end
-
-
-
-get '/products/as_json4' do
-  content_type :json
-  db = Dynamodb.db
-  db.tables.each{|t| puts t.name}
-  tbl = db.tables['products']
-  tbl.load_schema
-  items = tbl.items()
-  s = "["
-  
-  first=true; items.each{ |item|
-    if(first) then first=false else s+="," end
-    p "item.attributes", item.attributes
-    p "item.attributes.to_h", item.attributes.to_h
-    p "JSON.generate(item.attributes.to_h)", JSON.generate(item.attributes.to_h)
-    s += item.attributes.to_h.to_json
-  }
-  s += "]"
-  return s
-end
 
 
 get '/products/as_json5' do
@@ -137,5 +58,41 @@ get '/products/as_json5' do
   s += "]"
   return s
 end
+
+get '/products/as_html' do
+  db = Dynamodb.db
+  db.tables.each{|t| puts t.name}
+  tbl = db.tables['products']
+  tbl.load_schema
+  items = tbl.items()
+  s = ""
+  items.each{|item|
+    s += "-----------------<br/>"
+    item.attributes.each{|attr| s += (attr.to_s + "<br/>")}
+  }
+  
+  return s
+end
+
+get '/products/as_json2' do
+  content_type :json
+  db = Dynamodb.db
+  db.tables.each{|t| puts t.name}
+  tbl = db.tables['products']
+  tbl.load_schema
+  items = tbl.items()
+  s = "["
+  
+  first=true; items.each{ |item|
+    if(first) then first=false else s+="," end
+    p "item.attributes", item.attributes
+    p "item.attributes.to_h", item.attributes.to_h
+    p "JSON.generate(item.attributes.to_h)", JSON.generate(item.attributes.to_h)
+    s += JSON.generate(item.attributes.to_h)
+  }
+  s += "]"
+  return s
+end
+
 
 
