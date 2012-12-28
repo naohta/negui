@@ -15,8 +15,14 @@ get '/api/:uid/:hashkey/leave_notice/list' do
 end
 
 get '/test/json' do
+  '[some1,some2,some3]'
+end
+
+get '/test/json2' do
   '{"root":{"k1":"yas!","k2":"This is JSON one."}}'
 end
+
+
 
 get '/products/json' do
   content_type :json
