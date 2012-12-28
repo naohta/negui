@@ -15,7 +15,7 @@ get '/api/:uid/:hashkey/leave_notice/list' do
 end
 
 get '/test/json' do
-  'pad([some1,some2,some3])'
+  'pad(["some1","some2","some3"]);'
 end
 
 get '/test/json2' do
