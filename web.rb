@@ -14,7 +14,7 @@ end
 get '/api/:uid/:hashkey/leave_notice/list'
 end
 
-get '/test/json'
+get '/test/json' do
   '{"root":{"k1":"yas!","k2":"This is JSON one."}}'
 end
 
