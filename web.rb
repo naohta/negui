@@ -11,6 +11,7 @@ get '/hello/:name' do
   "hello, #{params[:name]}:)"
 end
 
+
 get '/api/:uid/:hashkey/leave_notice/list' do
 end
 
@@ -22,7 +23,9 @@ get '/test/json2' do
   'pad({"root":{"k1":"yas!","k2":"This is JSON one."}})'
 end
 
-
+get '/test/json3' do
+  'pad([{"k1":"v1"},{"k2":"v2"},{"k3":"v3"}])'
+end
 
 get '/products/json' do
   content_type :json
