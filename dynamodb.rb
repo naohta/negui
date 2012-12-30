@@ -12,6 +12,9 @@ class Dynamodb
     puts "No heroku configs on this env. I will read local secrets file."
     h = Hash[*File.read('.nao.secrets').split(/[ \n]+/)] 
     secrets = [ h['aws_access_key_id'], h['aws_secret_access_key'] ]
+    if(secrets[0]==nil) then
+      secrets = [ h['AWS_KEY'], h['AWS_SECRET'] ]
+    end
   end
   security_token_service = AWS::STS.new(
     access_key_id: secrets[0],

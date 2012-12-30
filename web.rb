@@ -11,7 +11,6 @@ get '/hello/:name' do
   "hello, #{params[:name]}:)"
 end
 
-
 get '/api/:uid/:hashkey/leave_notice/list' do
 end
 
@@ -20,7 +19,7 @@ get '/test/json' do
 end
 
 get '/test/json2' do
-  'pad({"root":{"k1":"yas!","k2":"This is JSON one."}})'
+  'pad([{"root":{"k1":"yas!","k2":"This is JSON one."}}])'
 end
 
 get '/test/json3' do
@@ -28,21 +27,34 @@ get '/test/json3' do
 end
 
 get '/products/json' do
-  content_type :json
+  content_type:json
   db = Dynamodb.db
   db.tables.each{|t| puts t.name}
   tbl = db.tables['products']
   tbl.load_schema
-  items = tbl.items()
-  s = "["
+  itmes = tbl.itmes
   
-  first=true; items.each{ |item|
-    if(first) then first=false else s+="," end
-    s += JSON.generate(item.attributes.to_h)
-  }
-  s += "]"
-  return s
 end
+
+
+
+get '/products/json6' do
+    content_type :json
+    db = Dynamodb.db
+    db.tables.each{|t| puts t.name}
+    tbl = db.tables['products']
+    tbl.load_schema
+    items = tbl.items()
+    s = "pad(["
+    first=true; items.each{ |item|
+        if(first) then first=false else s+="," end
+        s += JSON.generate(item.attributes.to_h)
+    }
+    s += "])"
+    return s
+end
+
+
 
 
 
