@@ -4,7 +4,6 @@ require 'aws/sts'
 require 'aws/dynamo_db'
 sw.stop
 
-
 class Dynamodb
   sw = Stopwatch.new("Create AWS session");
   secrets = [ENV['AWS_KEY'], ENV['AWS_SECRET']]
@@ -16,11 +15,11 @@ class Dynamodb
       secrets = [ h['AWS_KEY'], h['AWS_SECRET'] ]
     end
   end
-  security_token_service = AWS::STS.new(
+  sts = AWS::STS.new( # sts means security_token_service
     access_key_id: secrets[0],
     secret_access_key: secrets[1]
   )
-  session = security_token_service.new_session(duration:60*30)
+  session = sts.new_session(duration:60*30)
   AWS.config({dynamo_db_endpoint:"dynamodb.ap-northeast-1.amazonaws.com"})
   sw.stop
   

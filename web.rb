@@ -1,6 +1,5 @@
 require 'sinatra'
 require './dynamodb.rb'
-require 'aws/sts'
 require 'aws/dynamo_db'
 
 get '/' do "Very Merry Christmas!" end
