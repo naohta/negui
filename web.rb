@@ -11,7 +11,7 @@ get '/test/params/*:*' do |a,b| "Key is '#{a}', value is '#{b}'." end
 
 get '/load' do load_backyard;"Backyard programs are loaded." end
 get '/read' do content_type:json;read_table_names end
-
+get '/new' do content_type:json;new_notice end
 
 
 =begin
