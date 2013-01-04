@@ -1,7 +1,6 @@
 require 'sinatra'
 require './dynamodb.rb'
 require 'aws/dynamo_db'
-require 'aws/core/options/json_serializer'
 
 get '/' do "Happy New Year! Are u fine?" end
 get '/hello/:name' do "hello, #{params[:name]}:)" end

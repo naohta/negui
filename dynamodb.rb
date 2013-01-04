@@ -5,32 +5,41 @@ require 'aws/dynamo_db'
 sw.stop
 
 class Dynamodb
-  sw = Stopwatch.new("Create AWS session");
-  secrets = [ENV['AWS_KEY'], ENV['AWS_SECRET']]
-  if(secrets[0]==nil) then
-    puts "No heroku configs on this env. I will read local secrets file."
-    h = Hash[*File.read('.nao.secrets').split(/[ \n]+/)] 
-    secrets = [ h['aws_access_key_id'], h['aws_secret_access_key'] ]
+  def self.make_session
+    sw = Stopwatch.new("Create AWS session");
+    secrets = [ENV['AWS_KEY'], ENV['AWS_SECRET']]
     if(secrets[0]==nil) then
-      secrets = [ h['AWS_KEY'], h['AWS_SECRET'] ]
+      puts "No heroku configs on this env. I will read local secrets file."
+      h = Hash[*File.read('.nao.secrets').split(/[ \n]+/)] 
+      secrets = [ h['aws_access_key_id'], h['aws_secret_access_key'] ]
+      if(secrets[0]==nil) then
+        secrets = [ h['AWS_KEY'], h['AWS_SECRET'] ]
+      end
     end
+    sts = AWS::STS.new( # sts means security_token_service
+      access_key_id: secrets[0],
+      secret_access_key: secrets[1]
+    )
+    @@session = sts.new_session(duration:900)
+    AWS.config({dynamo_db_endpoint:"dynamodb.ap-northeast-1.amazonaws.com"})
+    sw.stop
   end
-  sts = AWS::STS.new( # sts means security_token_service
-    access_key_id: secrets[0],
-    secret_access_key: secrets[1]
-  )
-  session = sts.new_session(duration:60*30)
-  AWS.config({dynamo_db_endpoint:"dynamodb.ap-northeast-1.amazonaws.com"})
-  sw.stop
   
-  sw = Stopwatch.new("Connect to DynamoDB");
-  @@db = AWS::DynamoDB.new(
-    access_key_id: session.credentials[:access_key_id],
-    secret_access_key: session.credentials[:secret_access_key],
-    session_token: session.credentials[:session_token]
-  )
-  sw.stop()
-  def self.db()
+  def self.connect
+    sw = Stopwatch.new("Connect to DynamoDB");
+    @@db = AWS::DynamoDB.new(
+      access_key_id: @@session.credentials[:access_key_id],
+      secret_access_key: @@session.credentials[:secret_access_key],
+      session_token: @@session.credentials[:session_token]
+    )
+    sw.stop()
+  end
+  
+  def self.db
     @@db
   end
+  
+  make_session
+  connect
+  
 end
