@@ -1,4 +1,4 @@
-require './stopwatch.rb'
+load './stopwatch.rb'
 sw = Stopwatch.new("require");
 require 'aws/sts'
 require 'aws/dynamo_db'
