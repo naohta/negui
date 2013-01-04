@@ -36,6 +36,15 @@ class Dynamodb
   end
   
   def self.db
+    p @@session.expires_at
+    p Time.now.utc
+    p @@session.expires_at - Time.now.utc
+    exp = @@session.expires_at - Time.now.utc
+    if(exp<=30) then 
+      puts "AWS Session will expires in #{exp}, so we will remake session now."
+      make_session
+      connect
+    end
     @@db
   end
   
