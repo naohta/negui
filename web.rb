@@ -3,7 +3,7 @@ require './dynamodb.rb'
 require 'aws/dynamo_db'
 require 'aws/core/options/json_serializer'
 
-get '/' do "Very Merry Christmas!" end
+get '/' do "Happy New Year! Are u fine?" end
 get '/hello/:name' do "hello, #{params[:name]}:)" end
 get '/test/json' do 'pad(["some1","some2","some3"]);' end
 get '/test/json2' do 'pad([{"root":{"k1":"yas!","k2":"This is JSON one."}}])' end
