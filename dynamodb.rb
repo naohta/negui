@@ -5,19 +5,24 @@ require 'aws/dynamo_db'
 sw.stop
 
 class Dynamodb
+
+  def self.read_aws_keys
+    puts __method__
+    puts "I will try to read AWS keys from environment variables..."
+    keys = [ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_KEY']]
+    if(keys[0]==nil) then
+      puts "No AWS environment variables here. So I will read local secrets file."
+      h = Hash[*File.read('.nao.secrets').split(/[ \n]+/)] 
+      keys = [ h['AWS_ACCESS_KEY'], h['AWS_SECRET_KEY'] ]
+      if(keys[0]==nil) then puts "No secret file here. So I exit.";exit 1;end
+    end
+    return keys
+  end
+
   def self.make_session
     sw = Stopwatch.new("Create AWS session");
-    secrets = [ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_KEY']]
-    if(secrets[0]==nil) then
-      puts "No environment file here. So I will read local secrets file."
-      h = Hash[*File.read('.nao.secrets').split(/[ \n]+/)] 
-      secrets = [ h['AWS_ACCESS_KEY'], h['AWS_SECRET_KEY'] ]
-      if(secrets[0]==nil) then
-        puts "No secret file here."
-        exit 1;
-      end
-    end
-    sts = AWS::STS.new(access_key_id:secrets[0],secret_access_key:secrets[1])
+    keys = read_aws_keys
+    sts = AWS::STS.new(access_key_id:keys[0],secret_access_key:keys[1])
     @@session = sts.new_session(duration:900)
     AWS.config({dynamo_db_endpoint:"dynamodb.ap-northeast-1.amazonaws.com"})
     sw.stop
