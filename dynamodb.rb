@@ -7,23 +7,17 @@ sw.stop
 class Dynamodb
   def self.make_session
     sw = Stopwatch.new("Create AWS session");
-    secrets = [ENV['AWS_KEY'], ENV['AWS_SECRET']] # Heroku ENV
-    if(secrets[0]==nil)then
-      secrets = [ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_KEY']] # AWS Elastic Beanstalk ENV
-      # http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Ruby_custom_container.html
+    secrets = [ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_KEY']]
+    if(secrets[0]==nil) then
+      puts "No environment file here. So I will read local secrets file."
+      h = Hash[*File.read('.nao.secrets').split(/[ \n]+/)] 
+      secrets = [ h['AWS_ACCESS_KEY'], h['AWS_SECRET_KEY'] ]
       if(secrets[0]==nil) then
-        puts "No heroku configs on this env. I will read local secrets file."
-        h = Hash[*File.read('.nao.secrets').split(/[ \n]+/)] 
-        secrets = [ h['aws_access_key_id'], h['aws_secret_access_key'] ] # 1st local git repo (Windows XP)
-        if(secrets[0]==nil) then
-          secrets = [ h['AWS_KEY'], h['AWS_SECRET'] ] # 2nd local git repo(Macbook Air)
-        end
+        puts "No secret file here."
+        exit 1;
       end
     end
-    sts = AWS::STS.new( # sts means security_token_service
-      access_key_id: secrets[0],
-      secret_access_key: secrets[1]
-    )
+    sts = AWS::STS.new(access_key_id:secrets[0],secret_access_key:secrets[1])
     @@session = sts.new_session(duration:900)
     AWS.config({dynamo_db_endpoint:"dynamodb.ap-northeast-1.amazonaws.com"})
     sw.stop
