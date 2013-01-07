@@ -1,5 +1,7 @@
 require 'sinatra'
-def load_backyard;load './web2backyard.rb';end
+def load_backyard
+  load './web2backyard.rb'
+end
 load_backyard
 
 get '/' do "Happy New Year! Are u fine?" end

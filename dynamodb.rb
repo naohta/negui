@@ -20,6 +20,7 @@ class Dynamodb
   end
 
   def self.make_session
+    puts __method__
     sw = Stopwatch.new("Create AWS session");
     keys = read_aws_keys
     sts = AWS::STS.new(access_key_id:keys[0],secret_access_key:keys[1])
@@ -29,6 +30,7 @@ class Dynamodb
   end
   
   def self.connect
+    puts __method__
     sw = Stopwatch.new("Connect to DynamoDB");
     @@db = AWS::DynamoDB.new(
       access_key_id: @@session.credentials[:access_key_id],
@@ -39,9 +41,6 @@ class Dynamodb
   end
   
   def self.db
-    p @@session.expires_at
-    p Time.now.utc
-    p @@session.expires_at - Time.now.utc
     exp = @@session.expires_at - Time.now.utc
     if(exp<=30) then 
       puts "AWS Session will expires in #{exp}, so we will remake session now."

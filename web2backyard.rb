@@ -27,6 +27,14 @@ def read_table_names
   pad(s)
 end
 
+def new_notice
+  id = some::uuid::makeID #e.g.
+  id2 = id.firstLetter 10 #e.g.
+  tbl = Dynamodb.db.tables["notices"] #notice(s)
+  tbl.put_item({id:id, #e.g.
+  
+end
+
 
 =begin
 get '/read/:table_name/:hash_key' do
