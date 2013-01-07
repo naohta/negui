@@ -1,10 +1,12 @@
 require 'aws/dynamo_db'
 load './dynamodb.rb'
 
+#For JSONP - JSON with Padding
 def pad(s)
   "pad([" + s + "])"
 end
 
+#Simple, flat JSON
 def json_from_item(item)
   if(item.attributes.count==0) then return '' end
   s = '{';
