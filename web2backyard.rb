@@ -28,13 +28,16 @@ def read_table_names
 end
 
 def new_notice
-  id = some::uuid::makeID #e.g.
-  id2 = id.firstLetter 10 #e.g.
-  tbl = Dynamodb.db.tables["notices"] #notice(s)
-  tbl.put_item({id:id, #e.g.
-  
+  require 'securerandom'
+  id = SecureRandom.uuid
+  id2 = id[0,8]
+  id3 = id2[0,4] + "_" + id2[4,4]
+  p id
+  p id2
+  p id3
+  tbl = Dynamodb.db.tables["notices"].load_schema
+  p tbl.items.put({id:id, id2:id2, title:"absence"})
 end
-
 
 =begin
 get '/read/:table_name/:hash_key' do
