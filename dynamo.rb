@@ -4,7 +4,7 @@ require 'aws/sts'
 require 'aws/dynamo_db'
 sw.stop
 
-class Dynamodb
+class Dynamo
 
   def self.read_aws_keys
     puts __method__
@@ -28,7 +28,7 @@ class Dynamodb
     AWS.config({dynamo_db_endpoint:"dynamodb.ap-northeast-1.amazonaws.com"})
     sw.stop
   end
-  
+
   def self.connect
     puts __method__
     sw = Stopwatch.new("Connect to DynamoDB");
