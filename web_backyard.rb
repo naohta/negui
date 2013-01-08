@@ -16,6 +16,14 @@ def simple_flat_json_from_item(item)
   s += '}'
 end
 
+def jsonp_w_items(items)
+  s=""; first=true; items.each{|item|
+    if(first) then first=false else s+="," end
+    s += simple_flat_json_from_item(item)
+  }
+  pad(s)
+end
+
 def read_table_names
   tables = Dynamo.db.tables
   s="";first=true;tables.each{ |t|
@@ -28,18 +36,27 @@ end
 def new_notice
   require 'securerandom'
   id = SecureRandom.uuid
-  id2 = id[0,8]
-  id3 = id2[0,4] + "_" + id2[4,4]
-  p id
-  p id2
-  p id3
+  p id[0,8]
   tbl = Dynamo.db.tables["notices"].load_schema
-  p tbl.items.put({id:id, ymd:"2011-11-11", id2:id2, title:"private"})
+  p tbl.items.put({id:id, ymd:Date.today})
 end
 
-def list_notices
-  items_in_2013 = Dynamo.db.tables["notices"].load_schema.items.where(:ymd).begins_with("2013")
-  items_in_2013.each{|i|
-    p i
-  }
+#def new_absence
+#  h = hash_for_
+#
+#end
+
+
+def list_notices(s)
+  items = Dynamo.db.tables["notices"].load_schema.items.where(:ymd).begins_with(s)
+  jsonp_w_items(items)
 end
+
+def time
+  now = Time.now
+  h = {utc:now.utc.to_s, local:now.localtime.to_s}
+  pad(h.to_json)
+end
+
+
+
