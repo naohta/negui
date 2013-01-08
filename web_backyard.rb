@@ -1,5 +1,8 @@
+# encoding:utf-8
 require 'aws/dynamo_db'
 load './dynamo.rb'
+
+JP_WDAY = %w(ì˙ åé âŒ êÖ ñÿ ã‡ ìy)
 
 def pad(s); "pad([" + s + "])" end #JSONP - JSON with Padding
 
@@ -33,18 +36,23 @@ def read_table_names
   pad(s)
 end
 
-def new_notice
+def hash_for_new_notice(title)
   require 'securerandom'
-  id = SecureRandom.uuid
-  p id[0,8]
-  tbl = Dynamo.db.tables["notices"].load_schema
-  p tbl.items.put({id:id, ymd:Date.today})
+  id = SecureRandom.uuid; p id[0,8]
+  # tbl = Dynamo.db.tables["notices"].load_schema
+  {id:id, ymd:Date.today}
 end
 
-#def new_absence
-#  h = hash_for_
-#
-#end
+def new_absence
+  h = {
+    ymd:Date.today,
+    section:"24",
+    staff:"114",
+    name:"Naohiro OHTA"
+    when:Date.today+11
+
+  }
+end
 
 
 def list_notices(s)
