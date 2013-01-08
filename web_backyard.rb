@@ -1,8 +1,8 @@
-# encoding:utf-8
+#encoding:utf-8
 require 'aws/dynamo_db'
 load './dynamo.rb'
 
-JP_WDAY = %w(“ú Œ ‰Î … –Ø ‹à “y)
+JP_WDAY = %w(æ—¥ æœˆ ç« æ°´ æœ¨ é‡‘ åœŸ)
 
 def pad(s); "pad([" + s + "])" end #JSONP - JSON with Padding
 
@@ -45,19 +45,29 @@ end
 
 def new_absence
   h = {
-    ymd:Date.today,
+    ymd:Date.today.to_s,
+    wday:JP_WDAY[Date.today.wday],
     section:"24",
     staff:"114",
-    name:"Naohiro OHTA"
-    when:Date.today+11
-
+    name:"Naohiro OHTA",
+    when:(Date.today+11).to_s,
+    title:"æ¬ å¸­å±Š"
   }
+  require 'securerandom'
+  h[:id] = SecureRandom.uuid
+  tbl = Dynamo.db.tables["notices"].load_schema
+  tbl.items.put(h)
+  h.to_s  
 end
-
 
 def list_notices(s)
   items = Dynamo.db.tables["notices"].load_schema.items.where(:ymd).begins_with(s)
   jsonp_w_items(items)
+end
+
+def list_templates(title)
+  item = Dynamo.db.tables["templates"].load_schema.items[title]
+  item.to_s
 end
 
 def time

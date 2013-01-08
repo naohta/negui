@@ -13,6 +13,8 @@ get '/test/params/*:*' do |a,b| "Key is '#{a}', value is '#{b}'." end
 
 get '/load' do load_backyard; "Backyard programs are loaded." end
 get '/read' do content_type:json; read_table_names end
-get '/new' do content_type:json; new_notice end
+get '/new' do content_type:json; new_absence end
 get '/list/*' do |ymd| content_type:json; list_notices ymd; end
 get '/time' do content_type:json; time end
+get '/templ/*' do |title| content_type:json; list_templates title end
+
