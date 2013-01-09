@@ -1,8 +1,15 @@
 #encoding:utf-8
 require 'aws/dynamo_db'
+require 'securerandom'
 load './dynamo.rb'
 
 JP_WDAY = %w(日 月 火 水 木 金 土)
+
+def time
+  now = Time.now
+  h = {local:now.localtime.to_s, utc:now.utc.to_s}
+  pad(h.to_json)
+end
 
 def pad(s); "pad([" + s + "])" end #JSONP - JSON with Padding
 
@@ -17,6 +24,10 @@ def simple_flat_json_from_item(item)
     s += '"'
   }
   s += '}'
+end
+
+def jsonp_w_item(item)
+  pad(simple_flat_json_from_item(item))
 end
 
 def jsonp_w_items(items)
@@ -37,7 +48,6 @@ def read_table_names
 end
 
 def hash_for_new_notice(title)
-  require 'securerandom'
   id = SecureRandom.uuid; p id[0,8]
   # tbl = Dynamo.db.tables["notices"].load_schema
   {id:id, ymd:Date.today}
@@ -53,7 +63,6 @@ def new_absence
     when:(Date.today+11).to_s,
     title:"欠席届"
   }
-  require 'securerandom'
   h[:id] = SecureRandom.uuid
   tbl = Dynamo.db.tables["notices"].load_schema
   tbl.items.put(h)
@@ -65,16 +74,43 @@ def list_notices(s)
   jsonp_w_items(items)
 end
 
-def list_templates(title)
+def template(title)
   item = Dynamo.db.tables["templates"].load_schema.items[title]
-  item.to_s
+  jsonp_w_item(item)
 end
 
-def time
-  now = Time.now
-  h = {utc:now.utc.to_s, local:now.localtime.to_s}
-  pad(h.to_json)
+def new_notice_w_template(template_title)
+  item = Dynamo.db.tables["templates"].load_schema.items[template_title]
+  attrs = item.attributes
+  if(attrs.count==0) then return "This item has no attributs" end
+  h = {}
+  attrs.each_key{ |key|
+    h[key] = "Test"
+  }
+  h[:title] = template_title
+  h[:ymd] = Date.today.to_s
+  h[:id] = SecureRandom.uuid
+  p h
+  p Dynamo.db.tables["notices"].load_schema.items.put(h)
+  time
 end
+
+
+def new_application_w_template(title)
+  item = Dynamo.db.tables["templates"].load_schema.items[title]
+  attrs = item.attributes
+  if(attrs.count==0) then return "This item has no attributs" end
+  h = {}
+  attrs.each_key{ |key|
+    h[key] = "Test"
+  }
+  h[:title] = title
+  h[:submit_date] = "#{Date.today.to_s} #{SecureRandom.uuid}"
+  p h
+  p Dynamo.db.tables["applications"].load_schema.items.put(h)
+  time
+end
+
 
 
 

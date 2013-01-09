@@ -1,3 +1,4 @@
+#encoding:utf-8
 require 'sinatra'
 def load_backyard
   load './web_backyard.rb'
@@ -16,5 +17,7 @@ get '/read' do content_type:json; read_table_names end
 get '/new' do content_type:json; new_absence end
 get '/list/*' do |ymd| content_type:json; list_notices ymd; end
 get '/time' do content_type:json; time end
-get '/templ/*' do |title| content_type:json; list_templates title end
+get '/template/*' do |title| content_type:json; template title; end
+get '/new2/*' do |title| content_type:json; new_application_w_template title; end
+
 
