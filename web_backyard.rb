@@ -105,7 +105,7 @@ def new_application_w_template(title)
     h[key] = "Test"
   }
   h[:title] = title
-  h[:submit_date] = "#{Date.today.to_s} #{SecureRandom.uuid}"
+  h[:submit_date] = "#{Time.now.to_s} [#{SecureRandom.uuid[0,13]}]"
   p h
   p Dynamo.db.tables["applications"].load_schema.items.put(h)
   time
