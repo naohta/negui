@@ -11,7 +11,9 @@ def time
   pad(h.to_json)
 end
 
-def pad(s); "pad([" + s + "])" end #JSONP - JSON with Padding
+def pad(s) #for JSON with Padding
+  "pad([" + s + "])"
+end
 
 def simple_flat_json_from_item(item)
   if(item.attributes.count==0) then return '' end
@@ -47,68 +49,24 @@ def read_table_names
   pad(s)
 end
 
-def hash_for_new_notice(title)
-  id = SecureRandom.uuid; p id[0,8]
-  # tbl = Dynamo.db.tables["notices"].load_schema
-  {id:id, ymd:Date.today}
-end
-
-def new_absence
-  h = {
-    ymd:Date.today.to_s,
-    wday:JP_WDAY[Date.today.wday],
-    section:"24",
-    staff:"114",
-    name:"Naohiro OHTA",
-    when:(Date.today+11).to_s,
-    title:"欠席届"
-  }
-  h[:id] = SecureRandom.uuid
-  tbl = Dynamo.db.tables["notices"].load_schema
-  tbl.items.put(h)
-  h.to_s  
-end
 
 def list_notices(s)
-  items = Dynamo.db.tables["notices"].load_schema.items.where(:ymd).begins_with(s)
+  items = Dynamo.db.tables["notices"].load_schema.items.where(:submit_date).begins_with(s)
   jsonp_w_items(items)
 end
 
-def template(title)
-  item = Dynamo.db.tables["templates"].load_schema.items[title]
-  jsonp_w_item(item)
-end
-
-def new_notice_w_template(template_title)
-  item = Dynamo.db.tables["templates"].load_schema.items[template_title]
-  attrs = item.attributes
-  if(attrs.count==0) then return "This item has no attributs" end
-  h = {}
-  attrs.each_key{ |key|
-    h[key] = "Test"
-  }
-  h[:title] = template_title
-  h[:ymd] = Date.today.to_s
-  h[:id] = SecureRandom.uuid
-  p h
-  p Dynamo.db.tables["notices"].load_schema.items.put(h)
-  time
-end
-
-
-def new_application_w_template(title)
-  item = Dynamo.db.tables["templates"].load_schema.items[title]
-  attrs = item.attributes
-  if(attrs.count==0) then return "[#{title}] is invalid template name." end
+def submit_notice(template_title)
+  attrs = Dynamo.db.tables["templates"].load_schema.items[template_title].attributes
+  if(attrs.count==0) then return "[#{template_title}] is invalid template title." end
   h = {}
   attrs.each_key{ |key|
     h[key] = "Test2"
   }
-  h[:title] = title
+  h[:title] = template_title
   tokyo = Time.now.localtime "+09:00"
   h[:submit_date] = "#{tokyo.to_s} [#{SecureRandom.uuid[0,13]}]"
   p h
-  p Dynamo.db.tables["applications"].load_schema.items.put(h)
+  p Dynamo.db.tables["notices"].load_schema.items.put(h)
   time
 end
 
