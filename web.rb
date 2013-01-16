@@ -1,7 +1,7 @@
 #encoding:utf-8
 require 'sinatra'
 def load_backyard
-  load './web_backyard.rb'
+  load './backyard_with_dynamo.rb'
 end
 load_backyard
 
