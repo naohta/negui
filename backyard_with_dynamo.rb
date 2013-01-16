@@ -99,13 +99,14 @@ end
 def new_application_w_template(title)
   item = Dynamo.db.tables["templates"].load_schema.items[title]
   attrs = item.attributes
-  if(attrs.count==0) then return "This item has no attributs" end
+  if(attrs.count==0) then return "[#{title}] is invalid template name." end
   h = {}
   attrs.each_key{ |key|
-    h[key] = "Test"
+    h[key] = "Test2"
   }
   h[:title] = title
-  h[:submit_date] = "#{Time.now.to_s} [#{SecureRandom.uuid[0,13]}]"
+  tokyo = Time.now.localtime "+09:00"
+  h[:submit_date] = "#{tokyo.to_s} [#{SecureRandom.uuid[0,13]}]"
   p h
   p Dynamo.db.tables["applications"].load_schema.items.put(h)
   time
