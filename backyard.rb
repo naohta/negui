@@ -9,10 +9,9 @@ def pad(s) #for JSON with Padding
   "pad([" + s + "])"
 end
 
-def time
-  now = Time.now
-  h = {local:now.localtime.to_s, utc:now.utc.to_s}
-  pad(h.to_json)
+def tokyo_time_with_hash
+  tokyo = Time.now.localtime "+09:00"
+  "#{tokyo.to_s} [#{SecureRandom.uuid[0,13]}]"
 end
 
 def simple_flat_json_from_item(item)
@@ -57,11 +56,6 @@ def submit_notice(template_title)
   h[:title] = template_title
   h[:submit_date] = tokyo_time_with_hash
   Dynamo.db.tables["notices"].load_schema.items.put(h)
-  time
-end
-
-def tokyo_time_with_hash
-  tokyo = Time.now.localtime "+09:00"
-  "#{tokyo.to_s} [#{SecureRandom.uuid[0,13]}]"
+  "done."
 end
 
