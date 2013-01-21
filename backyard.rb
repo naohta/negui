@@ -12,9 +12,14 @@ def tokyo_time_with_hash
 end
 
 def list_notices(s)
-  items = Dynamo.db.tables["notices"].load_schema.items.where(:submit_date).begins_with(s)
+  # items = Dynamo.db.tables["notices"].load_schema.items.where(:submit_date).begins_with(s) # Scan API
+  items = Dynamo.db.tables["notices"].load_schema.items.query(hash_value:"物品購入", range_begins_with:s) # Query API
   Jsonp.jsonp_from_dynamo_items(items)
 end
+
+
+
+
 
 def submit_notice(template_title)
   attrs = Dynamo.db.tables["templates"].load_schema.items[template_title].attributes
@@ -22,12 +27,10 @@ def submit_notice(template_title)
     return "[#{template_title}] is invalid template title."
   end
   h = {}
-  attrs.each_key do |key| h[key] = "（記入なし）" end
-  
+  attrs.each_key do |key| h[key] = "（記入なし）" end 
   h[:title] = template_title
   h[:submit_date] = tokyo_time_with_hash
   h[:"購入金額"] = 3456789
-
   Dynamo.db.tables["notices"].load_schema.items.put(h)
   "done."
 end
