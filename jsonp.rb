@@ -1,7 +1,7 @@
 #encoding:utf-8
 require 'aws/dynamo_db'
 
-class Jsonp
+module Jsonp
 
   def self.jsonp_from_dynamo_item(dynamo_item)
     pad(json(dynamo_item))
@@ -17,6 +17,7 @@ class Jsonp
     pad(s)
   end
 
+  private
   def self.json(dynamo_item)
     if(dynamo_item.attributes.count==0) then return '' end
     s = '{';
