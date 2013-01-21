@@ -1,8 +1,11 @@
 #encoding:utf-8
+load './stopwatch.rb'
+sw = Stopwatch.new("require")
 require 'aws/dynamo_db'
 require 'securerandom'
 load './dynamo.rb'
 load './jsonp.rb'
+sw.stop
 
 JP_WDAY = %w(日 月 火 水 木 金 土)
 
@@ -12,14 +15,17 @@ def tokyo_time_with_hash
 end
 
 def list_notices(s)
-
+  sw = Stopwatch.new("list_notices - Query for DynamoDB")
   # Scan API
   # items = Dynamo.db.tables["notices"].load_schema.items.where(:submit_date).begins_with(s)
-  
+
   # Query API
   items = Dynamo.db.tables["notices"].load_schema.items.query(hash_value:"物品購入", range_begins_with:s)
-
-  Jsonp.jsonp_from_dynamo_items(items)
+  sw.stop
+  sw = Stopwatch.new("list_notices - jsonp")
+  jsonp = Jsonp.jsonp_from_dynamo_items(items)
+  sw.stop
+  jsonp
 end
 
 def submit_notice(template_title)

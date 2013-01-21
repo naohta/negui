@@ -23,7 +23,7 @@ module Jsonp
   end
 
   def self.json(dynamo_item)
-    json_version2(dynamo_item)
+    json_version1(dynamo_item)
   end
 
   def self.json_version1(dynamo_item)
