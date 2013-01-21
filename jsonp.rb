@@ -18,7 +18,19 @@ module Jsonp
   end
 
   private
+  def self.pad(s) #for JSON with Padding
+    "pad([" + s + "])"
+  end
+
   def self.json(dynamo_item)
+    json_version2(dynamo_item)
+  end
+
+  def self.json_version1(dynamo_item)
+    JSON.generate dynamo_item.attributes.to_h
+  end
+  
+  def self.json_version2(dynamo_item)
     if(dynamo_item.attributes.count==0) then return '' end
     s = '{';
     first=true;
@@ -27,14 +39,12 @@ module Jsonp
       key=attr[0]
       value=attr[1]
       s += '"' + key + '":"'
-      s += (value.class==BigDecimal) ? value.to_i.to_s : value
+      # http://stackoverflow.com/questions/6458990/how-to-format-a-number-1000-as-1-000
+      s += (value.class==BigDecimal) ? value.to_i.to_s.reverse.gsub(/...(?=.)/,'\&,').reverse : value
       s += '"'
     }
     s += '}'
+    s
   end
-
-  def self.pad(s) #for JSON with Padding
-    "pad([" + s + "])"
-  end
-
+  
 end

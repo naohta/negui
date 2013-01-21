@@ -23,8 +23,11 @@ def submit_notice(template_title)
   end
   h = {}
   attrs.each_key do |key| h[key] = "（記入なし）" end
+  
   h[:title] = template_title
   h[:submit_date] = tokyo_time_with_hash
+  h[:"購入金額"] = 3456789
+
   Dynamo.db.tables["notices"].load_schema.items.put(h)
   "done."
 end
