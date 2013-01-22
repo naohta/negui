@@ -24,19 +24,14 @@ module Jsonp
   end
 
   def self.json(dynamo_item)
-    json_version1(dynamo_item)
     json_version2(dynamo_item)
   end
 
   def self.json_version1(dynamo_item)
-    sw = Stopwatch.new("json_version1")
-    h = JSON.generate dynamo_item.attributes.to_h
-    sw.stop
-    h
+    JSON.generate dynamo_item.attributes.to_h
   end
   
   def self.json_version2(dynamo_item)
-    sw = Stopwatch.new("json_version2")  
     if(dynamo_item.attributes.count==0) then return '' end
     s = '{';
     first=true;
@@ -45,13 +40,10 @@ module Jsonp
       key=attr[0]
       value=attr[1]
       s += '"' + key + '":"'
-      # http://stackoverflow.com/questions/6458990/how-to-format-a-number-1000-as-1-000
       s += (value.class==BigDecimal) ? value.to_i.to_s.reverse.gsub(/...(?=.)/,'\&,').reverse : value
       s += '"'
     }
     s += '}'
-    sw.stop
-    s
   end
   
 end
