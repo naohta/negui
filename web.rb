@@ -1,8 +1,8 @@
 #encoding:utf-8
 require 'sinatra'
 def load_backyard
-  load './write_to_dynamo.rb'
-  load './read_from_dynamo.rb'
+  load './dynamo_read.rb'
+  load './dynamo_write.rb'
 end
 load_backyard
 
@@ -22,8 +22,20 @@ get '/read' do read_table_names end
 get '/load' do load_backyard; "Backyard programs are loaded." end
 get '/time' do time end
 
-
-get '/list/*' do |s| list_notices s end
-get '/submit/*' do |title| submit_notice(title) end
-
 get '/template/*' do |title| template title end
+
+
+
+
+
+get '/submit/*' do |title|
+  submit_notice(title)
+end
+
+get '/list/*' do |s|
+  list_notices s
+end
+
+get '/one/*/*' do |hash,range|
+  one hash,range
+end

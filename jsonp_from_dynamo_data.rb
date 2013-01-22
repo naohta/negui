@@ -1,8 +1,8 @@
 #encoding:utf-8
-require 'aws/dynamo_db'
 
 module Jsonp
 
+  public #--------------------
   def self.jsonp_from_dynamo_item(dynamo_item)
     pad json(dynamo_item) 
   end
@@ -17,7 +17,7 @@ module Jsonp
     pad s
   end
 
-  private
+  private #--------------------
   def self.pad(s) #for JSON with Padding
     "pad([" + s + "])"
   end
@@ -26,6 +26,8 @@ module Jsonp
     json_version3(dynamo_item)
   end
 
+
+  #-----------------------------
   def self.json_version1(dynamo_item)
     JSON.generate dynamo_item.attributes.to_h
   end
@@ -45,9 +47,11 @@ module Jsonp
     s += '}'
   end
   
-  def self.json_version3(dynamo_item)    
+  #--------------------------------------------
+  def self.json_version3(dynamo_item) 
+    p dynamo_item
     # '{"range_value":"' + dynamo_item.range_value + '"}')
-    "{\"\":\"#{dynamo_item.hash_value}\",\"提出日・提出者\":\"#{dynamo_item.range_value}\"}"
+    "{\"届タイトル\":\"#{dynamo_item.hash_value}\",\"提出\":\"#{dynamo_item.range_value}\"}"
   end
   
 end

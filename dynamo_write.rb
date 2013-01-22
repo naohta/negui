@@ -1,6 +1,6 @@
 #encoding:utf-8
 require 'aws/dynamo_db'
-load './dynamo.rb'
+load './dynamo_connect.rb'
 load './range_key_jp.rb'
 
 def submit_notice(template_title)
