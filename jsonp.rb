@@ -1,5 +1,6 @@
 #encoding:utf-8
 require 'aws/dynamo_db'
+load './stopwatch.rb'
 
 module Jsonp
 
@@ -24,13 +25,18 @@ module Jsonp
 
   def self.json(dynamo_item)
     json_version1(dynamo_item)
+    json_version2(dynamo_item)
   end
 
   def self.json_version1(dynamo_item)
-    JSON.generate dynamo_item.attributes.to_h
+    sw = Stopwatch.new("json_version1")
+    h = JSON.generate dynamo_item.attributes.to_h
+    sw.stop
+    h
   end
   
   def self.json_version2(dynamo_item)
+    sw = Stopwatch.new("json_version2")  
     if(dynamo_item.attributes.count==0) then return '' end
     s = '{';
     first=true;
@@ -44,6 +50,7 @@ module Jsonp
       s += '"'
     }
     s += '}'
+    sw.stop
     s
   end
   

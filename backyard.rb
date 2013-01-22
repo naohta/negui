@@ -1,11 +1,9 @@
 #encoding:utf-8
-load './stopwatch.rb'
-sw = Stopwatch.new("require")
 require 'aws/dynamo_db'
 require 'securerandom'
 load './dynamo.rb'
 load './jsonp.rb'
-sw.stop
+load './stopwatch.rb'
 
 JP_WDAY = %w(日 月 火 水 木 金 土)
 
