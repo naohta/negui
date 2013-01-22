@@ -16,7 +16,7 @@ end
 
 
 def one(hash_value,range_value)
-  items = Dynamo.db.tables["notices"].load_schema.items.query(hash_value:hash_value, range_value:range_value)
-  Jsonp.jsonp_from_dynamo_items items
+  item = Dynamo.db.tables["notices"].load_schema.items[hash_value, range_value]
+  Jsonp.jsonp_from_dynamo_item item
 end
 
