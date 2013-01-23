@@ -1,0 +1,151 @@
+<!DOCTYPE HTML> <!-- Created by Naohiro OHTA, All Rights Reserved. -->
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+    <title>kuwai by Naohiro OHTA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="basic.css" rel="stylesheet" >
+
+    <!---jQuery--------------------------------------------------------->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <!------------------------------------------------------------------>
+
+    <!--IE Hacks-------------------------------------------------------->
+    <!--[if lt IE 9]><script src="js0/html5shiv.js"></script><![endif]-->
+    <script src="js0/jquery.placeholder.for_ie.call_me_when_page_reloaded.js"></script><style>.placeholder{color:#aaa;}</style>
+    <script src="js3/dummy_console_for_ie6.js"></script>
+    <!------------------------------------------------------------------>
+
+    <!---jQuery UI------------------------------------------------------>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/themes/redmond/jquery-ui.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/i18n/jquery-ui-i18n.min.js"></script>
+    <!------------------------------------------------------------------>
+
+    <script src="http://crypto-js.googlecode.com/svn/tags/3.0.1/build/rollups/sha256.js"></script>
+    <script src="js2/NAAjax.js"></script>
+    <script src="js2/NAAjax_HistoryDisplayExtension.js"></script>
+    <script src="js1/uuid.js"></script>
+    <script src="js2/setOptionsToSelect.js"></script>
+    <script src="js2/cutStringByLength.js"></script>
+    <script src="js2/ios_safari_hide_url_bar.js"></script>
+    <script src="js2/shortTime.js"></script>
+    <script src="js2/buildTable.js"></script>
+    <script src="js2/NAVerticalTable.js"></script>
+    <script src="js2/NALocalizer.js"></script>
+    <script src="js2/NAKey.js"></script>
+    <script src="js1/jquery.cookie.js"></script><script>$(function(){$.cookie.json = true;});</script>
+    <script src="js3/do_you_really_want_to_close.js"></script>
+  </head>
+
+  <body>
+    <header>
+
+      <nav class='left'>
+        <select id="page_selector" onChange="load_page_as_main_content($('#page_selector').val())" class="hidden" style="width:160px"></select>
+        <button type="button" id='ajax_status' onClick='$("#ajax_status_dialog").dialog("open")' class="hidden">
+          <img id='ajax_status_img' src='pict/loading(ShigenoriTanaka).gif' class="hidden"></img>
+        </button>
+      </nav>
+
+      <div id='login' class='right'>
+        <button type="button" id='login_user' onClick="$('#login_dialog').dialog('open')" class='round_rect pink'>ログイン</button>
+      </div>
+      
+      <hr/>
+    </header>
+
+    <section id='main_content'> <!-- Use form tag for jqKey.js tab/enter key handling -->
+      <h1>kuwaii</h1>
+      <input id="url" type="text" name="How about" placeholder="/list/2013-01  etc..." value="/list/2013">
+      <input id="btn" type="button" onClick='$("#tbl").empty();callWebAPI()' value='GO'>
+      <table id="tbl"></table>
+    </section>
+
+    <footer>
+      <hr/>&copy; 2012 Naohiro OHTA
+    </footer>
+
+    <script>
+      function callWebAPI(){
+        $.ajax({
+          type:"GET",
+          url:$('#url').val(),
+          dataType:"jsonp",
+          jsonpCallback:"pad",
+          contentType:"application/json",
+          success:function(result){
+            console.log("callWebAPI-Success");
+            NAVerticalTable.build($('#tbl'), result);
+          },
+          error:function(){
+            console.log("callWebAPI-Error");
+          }
+        });
+      };  
+    </script>
+
+    <!-- Initialize ----------------------------- -->
+    <script>
+      $(function(){
+        $("#login_user").focus();
+        ios_safari_hide_url_bar();
+        NAKey.setTabstopForEscKey($("#page_selector"));
+        NAKey.setEnterkeyMode(3);
+        NALocalizer.loadMapFromServer();
+      });
+    </script>
+    <!-- ---------------------------------------- -->
+    <!-- Login Dialogs --------------------------------------------------------->
+    <div id="login_dialog">
+      <input id="login_input_uid" type="text" placeholder="ユーザーネーム"></input>
+      <input id="login_input_pw" type="password" placeholder="パスワード"></input>
+    </div>
+    <script>
+      $(function(){
+        $('#login_dialog').dialog({
+          autoOpen:false, title:'Login3', closeOnEscape:true, modal:true,
+          open:function(){NAKey.setTabstops($(this).parent());},
+          close:function(){NAKey.setTabstops($("#main_content"))},
+          buttons:{
+            "OK":function(){
+              $('#login_user').text("…");
+              NAAjax.setWho($("#login_input_uid").val(), $("#login_input_pw").val(),$("#who_am_i"));
+              var when_succeed = function(result){
+                var maxLength = 5;
+                $('#login_user').text(cutStringByLength(result.realname, maxLength));
+                $('#login_user').removeClass("pink");
+                $('#login_user').addClass("white_weak");
+                build_page_selector();
+                ios_safari_hide_url_bar();
+              };
+              NAAjax.ajax({name:"getPerson",params:{a:5,b:6,c:7}}, when_succeed);               
+              $(this).dialog('close');
+            }
+          }
+        });
+      });
+    </script>   
+    <!--------------------------------------------------------- Login Dialogs -->
+
+    <!-- Ajax Dialogs ---------------------------------------------------------->
+    <div id="ajax_status_dialog"><div id='ajax_history_box'></div></div>
+    <script>
+      $(function(){
+        $('#ajax_status_dialog').dialog({
+          autoOpen:false, title:'Ajax Status', closeOnEscape:true, modal:false,
+          open:function(){NAKey.setTabstops($(this).parent());},
+          close:function(){NAKey.setTabstops($("#main_content"))},
+          buttons:{
+            "OK":function(){$(this).dialog('close');}
+          }
+        });
+      });
+    </script>
+    <!---------------------------------------------------------- Ajax Dialogs -->
+
+  </body>
+
+</html>
