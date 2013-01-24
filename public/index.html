@@ -34,6 +34,7 @@
     <script src="js2/shortTime.js"></script>
     <script src="js2/buildTable.js"></script>
     <script src="js2/NAVerticalTable.js"></script>
+    <script src="js2/NAVerticalTableForDynamo.js"></script>
     <script src="js2/NALocalizer.js"></script>
     <script src="js2/NAKey.js"></script>
     <script src="js1/jquery.cookie.js"></script><script>$(function(){$.cookie.json = true;});</script>
@@ -60,7 +61,7 @@
     <section id='main_content'> <!-- Use form tag for jqKey.js tab/enter key handling -->
       <h1>kuwaii</h1>
       <input id="url" type="text" name="How about" placeholder="/list/2013-01  etc..." value="/list/2013">
-      <input id="btn" type="button" onClick='$("#tbl").empty();callWebAPI()' value='GO'>
+      <input id="btn" type="button" onClick='$("#tbl").empty();callWebAPI($("#url").val())' value='GO'>
       <table id="tbl"></table>
     </section>
 
@@ -69,16 +70,19 @@
     </footer>
 
     <script>
-      function callWebAPI(){
+      var func_on_click = function(hash,range){
+        callWebAPI("/one/"+hash+"/"+range);
+      }
+      function callWebAPI(url){
         $.ajax({
           type:"GET",
-          url:$('#url').val(),
+          url:url,
           dataType:"jsonp",
           jsonpCallback:"pad",
           contentType:"application/json",
           success:function(result){
             console.log("callWebAPI-Success");
-            NAVerticalTable.build($('#tbl'), result);
+            NAVerticalTableForDynamo.build($('#tbl'), result);
           },
           error:function(){
             console.log("callWebAPI-Error");
