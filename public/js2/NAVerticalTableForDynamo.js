@@ -15,7 +15,7 @@ var NAVerticalTableForDynamo = function(){
 		// dig function 's private functions.
 		var li = function(data){return "<li style='list-style-type:none'>" + data + "</li>";};
 		var spanForKey = function(k){return "<span class='key'>" +k+ "</span>";};
-		var spanForValue = function(i){return "<span class='value'> " +i+ "</span>";};
+		var spanForValue = function(i){return "<span class='value'>" +i+ "</span>";};
 		// dig function 's  main procedure.
 		for(var k in o){
 			var v = o[k];
@@ -24,7 +24,7 @@ var NAVerticalTableForDynamo = function(){
 			if(typeof(v)=='object')
 				s = dig(s,v,dottedKey);
 			else
-				s += li(spanForKey(dottedKey)+spanForValue(v));
+				s += li(spanForKey(dottedKey)+" "+spanForValue(v));
 		}
 		return s;
 	};

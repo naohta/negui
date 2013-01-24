@@ -17,6 +17,10 @@ module Jsonp
     pad s
   end
 
+  def self.jsonp_from_dynamo_item_attrs(dynamo_item)
+    pad json_version2(dynamo_item) 
+  end
+
   private #--------------------
   def self.pad(s) #for JSON with Padding
     "pad([" + s + "])"
@@ -33,10 +37,13 @@ module Jsonp
   end
   
   def self.json_version2(dynamo_item)
+p dynamo_item
+p dynamo_item.attributes.count
     if(dynamo_item.attributes.count==0) then return '' end
     s = '{';
     first=true;
     dynamo_item.attributes.each{ |attr|
+p attr
       if(first) then first=false else s+=',' end
       key=attr[0]
       value=attr[1]
