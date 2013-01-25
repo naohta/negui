@@ -1,0 +1,53 @@
+<!DOCTYPE HTML> <!-- Created by Naohiro OHTA, All Rights Reserved. -->
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>kuwai by Naohiro OHTA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <!--[if lt IE 9]><script src="js0/html5shiv.js"></script><![endif]-->
+    <link href="basic.css" rel="stylesheet" >
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/themes/redmond/jquery-ui.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/i18n/jquery-ui-i18n.min.js"></script>
+
+    <script src="js2/NAAjax.js"></script>
+    <script src="js2/NAAjax_HistoryDisplayExtension.js"></script>
+    <script src="http://crypto-js.googlecode.com/svn/tags/3.0.1/build/rollups/sha256.js"></script>
+    <script src="js1/uuid.js"></script>
+
+    <script src="js2/setOptionsToSelect.js"></script>
+    <script src="js2/cutStringByLength.js"></script>
+    <script src="js2/hideURLBar.js"></script>
+    <script src="js2/shortTime.js"></script>
+    <script src="js2/buildTable.js"></script>
+    <script src="js2/NAVerticalTable.js"></script>
+    <script src="js2/NALocalizer.js"></script>
+  </head>
+  <body>
+    <h1>kuwai</h1>
+
+    <textarea id="urltext" rows=5 cols=30>/list/2013</textarea>
+    <input type="button" id="btn" onClick='$("#tbl").empty();callWebAPI()' value='GO!'>
+    <table id="tbl"></table>
+    <script>
+      function callWebAPI(){
+        $.ajax({
+          type:"GET",
+          url:$('#urltext').val(),
+          dataType:"jsonp",
+          jsonpCallback:"pad",
+          contentType:"application/json",
+          success:function(result){
+            console.log("callWebAPI-Success");
+            NAVerticalTable.build($('#tbl'), result);
+          },
+          error:function(){
+            console.log("callWebAPI-Error");
+          }
+        });
+      };  
+    </script>
+  </body>
+</html>
