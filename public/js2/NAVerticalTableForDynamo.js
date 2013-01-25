@@ -7,7 +7,7 @@ var NAVerticalTableForDynamo = function(){
 	// --------------------------------------------
 	// Private members
 	// --------------------------------------------
-	var tr = function(data){return "<tr onclick='var v=$(this).find(\".value\"); func_on_click(v[0].innerText,v[1].innerText);'>" + data + "</tr>";};
+	var tr = function(data){return "<tr onclick='var v=$(this).find(\".value\"); func_on_click($(v[0]).text(),$(v[1]).text());'>" + data + "</tr>";};
 	var td1 = function(data){return "<td>" + data + "</td>";};
 	var td2 = function(data){return "<td align='left' style='width:100%;word-break:break-all;'>" + data + "</td>";};
 
