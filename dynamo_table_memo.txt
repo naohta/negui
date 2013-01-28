@@ -1,0 +1,5 @@
+TableName[HashKey(Type), RangeKey(Type)]
+
+negui_records[title(String), range_key(String)]
+negui_templates[title(String)]
+
